@@ -1,22 +1,21 @@
 #ifndef POMODORO_TRACKER_H
 #define POMODORO_TRACKER_H
 
-#include <ctime>
-
 class PomodoroTracker {
 private:
     bool studying;
     time_t startTime;
-    const char* getTodayDate();  // Get current date in "YYYY-MM-DD" format
-    void logStudyTime(int seconds);  // Save study session to file
-    void countdown(int seconds);  // Countdown timer with delays
+    const char* getTodayDate();  // Gets date like "2025-05-03"
+    void logStudyTime(int seconds);
+    void countdown(int seconds);  // Basic timer
 
 public:
-    PomodoroTracker();  // Constructor
-    void startStudy();  // Start a study session
-    void stopStudy();   // Stop a study session
-    void showReport();  // Show total study time today
-    void startPomodoro();  // Start Pomodoro (25 min study, 5 min break)
+    PomodoroTracker();
+    void startStudy();
+    void stopStudy();
+    void showReport();
+    void startPomodoro();
 };
 
 #endif
+
