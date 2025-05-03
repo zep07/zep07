@@ -1,7 +1,8 @@
 #include <iostream>
 #include <cstdio>
 #include <cstring>
-#include <unistd.h>  // For usleep
+#include <ctime>
+#include <unistd.h>  // For usleep (Linux/macOS)
 #include "PomodoroTracker/PomodoroTracker.h"
 
 using namespace std;
@@ -15,7 +16,7 @@ const char* PomodoroTracker::getTodayDate() {
     static char date[11];  // "YYYY-MM-DD"
     time_t now = time(0);
     tm* ltm = localtime(&now);
-    sprintf(date, "%04d-%02d-%02d", 1900 + ltm->tm_year, 1 + ltm->tm_mon, ltm->tm_mday);
+    sprintf(date, "%4d-02d-%02d", 1900 + ltm->tm_year, 1 + ltm->tm_mon, ltm->tm_mday);
     return date;
 }
 
@@ -25,7 +26,7 @@ void PomodoroTracker::logStudyTime(int seconds) {
         fprintf(file, "%s %d\n", getTodayDate(), seconds);
         fclose(file);
     } else {
-        cout << "Error saving to file.\n";
+        cout << "Error writing to file.\n";
     }
 }
 
@@ -34,9 +35,7 @@ void PomodoroTracker::countdown(int seconds) {
         int mins = i / 60;
         int secs = i % 60;
         cout << "\rTime remaining: " << mins << "m " << secs << "s " << flush;
-
-        // Slow down time by adding a microsecond delay
-        usleep(1000000); // 100,000 microseconds = 0.1 seconds
+        usleep(1000000);  // 0.1 second per tick (slow enough to see countdown)
     }
     cout << "\nTime's up!\n";
 }
@@ -45,9 +44,9 @@ void PomodoroTracker::startStudy() {
     if (!studying) {
         time(&startTime);
         studying = true;
-        cout << "Study session started!\n";
+        cout << "Study session started on " << getTodayDate() << "!\n";
     } else {
-        cout << "You're already studying.\n";
+        cout << "Already studying!\n";
     }
 }
 
@@ -55,10 +54,10 @@ void PomodoroTracker::stopStudy() {
     if (studying) {
         time_t endTime;
         time(&endTime);
-        int duration = static_cast<int>(difftime(endTime, startTime));
+        int duration = (int)difftime(endTime, startTime);
         studying = false;
         logStudyTime(duration);
-        cout << "Study stopped. Duration: " << duration << " seconds.\n";
+        cout << "Stopped. Duration: " << duration << " seconds.\n";
     } else {
         cout << "You haven't started studying yet.\n";
     }
@@ -67,7 +66,7 @@ void PomodoroTracker::stopStudy() {
 void PomodoroTracker::showReport() {
     FILE* file = fopen("study_log.txt", "r");
     if (file == NULL) {
-        cout << "No log file found.\n";
+        cout << "No logs found.\n";
         return;
     }
 
@@ -83,17 +82,18 @@ void PomodoroTracker::showReport() {
     }
 
     fclose(file);
-
     int mins = total / 60;
     int secs = total % 60;
 
-    cout << "\nToday's Total Study Time: " << mins << " minutes and " << secs << " seconds.\n";
+    cout << "\n--- Study Report for " << today << " ---\n";
+    cout << "Total Study Time: " << mins << " minutes and " << secs << " seconds.\n";
 }
 
 void PomodoroTracker::startPomodoro() {
-    cout << "\nStarting Pomodoro: 25 minutes of focused study time.\n";
-    countdown(1 * 60);  // 25 minutes focus time
+    cout << "\nPomodoro Session for " << getTodayDate() << ":\n";
+    cout << "Focus time: 25 minutes.\n";
+    countdown(25 * 60);  // 25 minutes
 
-    cout << "\nBreak time! 5 minutes.\n";
-    countdown(5 * 60);  // 5 minutes break time
+    cout << "\nBreak time: 5 minutes.\n";
+    countdown(5 * 60);  // 5 minutes
 }
