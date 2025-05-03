@@ -12,22 +12,21 @@ int main() {
         cout << "1. Start Studying\n";
         cout << "2. Stop Studying\n";
         cout << "3. Show Today's Report\n";
-        cout << "4. Start Pomodoro (25 min study + 5 min break)\n";
+        cout << "4. Start Pomodoro (25m Focus + 5m Break)\n";
         cout << "5. Exit\n";
         cout << "Choose an option: ";
         cin >> choice;
 
-        if (choice == 1) tracker.startStudy();
-        else if (choice == 2) tracker.stopStudy();
-        else if (choice == 3) tracker.showReport();
-        else if (choice == 4) tracker.startPomodoro();
-        else if (choice == 5) {
-            cout << "Goodbye!\n";
-            break;
-        } else {
-            cout << "Invalid choice. Try again.\n";
+        switch (choice) {
+            case 1: tracker.startStudy(); break;
+            case 2: tracker.stopStudy(); break;
+            case 3: tracker.showReport(); break;
+            case 4: tracker.startPomodoro(); break;
+            case 5: cout << "Goodbye!\n"; return 0;
+            default: cout << "Invalid choice.\n";
         }
     }
 
     return 0;
 }
+
