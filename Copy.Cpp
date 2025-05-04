@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
-#include <unistd.h>  // For usleep 
+#include <unistd.h>  // For usleep
 #include "PomodoroTracker/PomodoroTracker.h"
 
 using namespace std;
@@ -14,19 +14,19 @@ PomodoroTracker::PomodoroTracker() {
 
 const char* PomodoroTracker::getTodayDate() {
     static char date[11];  // "YYYY-MM-DD"
-    time_t now = time(0);
+    time_t now = time(0); // Get current time as time_t
     tm* ltm = localtime(&now);
     sprintf(date, "%4d-02d-%02d", 1900 + ltm->tm_year, 1 + ltm->tm_mon, ltm->tm_mday);
     return date;
 }
-
+ // Open "study_log.txt" in append mode
 void PomodoroTracker::logStudyTime(int seconds) {
     FILE* file = fopen("study_log.txt", "a");
     if (file != NULL) {
         fprintf(file, "%s %d\n", getTodayDate(), seconds);
         fclose(file);
     } else {
-        cout << "Error writing to file.\n";
+        cout << "Error writing to file.\n";  // If the file couldn't be opened (file doesn't exist)
     }
 }
 
@@ -35,7 +35,7 @@ void PomodoroTracker::countdown(int seconds) {
         int mins = i / 60;
         int secs = i % 60;
         cout << "\rTime remaining: " << mins << "m " << secs << "s " << flush;
-        usleep(1000000);  // 0.1 second per tick (slow enough to see countdown)
+        usleep(1000000);  // 0.1 (second per tick (slow enough to see countdown)
     }
     cout << "\nTime's up!\n";
 }
