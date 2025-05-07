@@ -16,7 +16,7 @@ const char* PomodoroTracker::getTodayDate() {
     static char date[11];  // "YYYY-MM-DD"
     time_t now = time(0); // Get current time as time_t
     tm* ltm = localtime(&now);
-    sprintf(date, "%4d-02d-%02d", 1900 + ltm->tm_year, 1 + ltm->tm_mon, ltm->tm_mday);
+    sprintf(date, "%4d-02d-%02d", 1900 + ltm->tm_year, 3 + ltm->tm_mon, ltm->tm_mday);
     return date;
 }
  // Open "study_log.txt" in append mode
